@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	.jumbotron
+		.container.text-center
+			h1 Welcome to Zead
+			p The best place to read stories you love
+			p
+				a.btn.btn-primary.btn-social.btn-facebook(href='/auth/facebook')
+					span.fa.fa-facebook
+					|  Sign in with Facebook
+				br
+				a.btn.btn-primary.btn-social.btn-google(href='/auth/google')
+					span.fa.fa-google
+					|  Sign in with Google
