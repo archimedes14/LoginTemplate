@@ -5,10 +5,12 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var constants = require('../config/constants');
 var User = require('../models/user')
+var UserService = require('../services/user'); 
 /* Passport */
 
 passport.serializeUser(function(user, done) {
-  done(null, user);
+  var newUser = UserService.sanitize(user); 
+  done(null, newUser);
 });
 
 passport.deserializeUser(function(obj, done) {
@@ -64,7 +66,7 @@ router.get('/google/callback',
     console.log(newUser); 
     User.findOrCreate(newUser, function(err, newUser) {
       if (err) return console.log(err);
-      res.send(newUser);
+         res.redirect('/'); 
     });
   });
 
@@ -89,8 +91,15 @@ router.get('/facebook/callback',
   console.log(newUser); 
   User.findOrCreate(newUser, function(err, newUser) {
     if (err) return console.log(err);
-    res.send(newUser);
+    res.redirect('/'); 
   });
 });
+
+router.get('/logout', function(req, res) {
+  req.logout(); 
+  req.session.destroy(); 
+  res.redirect('/');
+});
+
 
 module.exports = router;

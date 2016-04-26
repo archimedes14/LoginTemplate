@@ -11,5 +11,8 @@ nav(role="navigation").navbar.navbar-inverse
 			li.active: a(href="#") About
 			li: a(href="#") Help
 		ul.nav.navbar-nav.navbar-right
-			li: a(href="#") Login
+			if !user
+				li: a(href="#") Login
+			else
+				li: a(href="/auth/logout") Log Out 
 			

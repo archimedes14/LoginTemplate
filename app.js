@@ -7,6 +7,12 @@ var bodyParser = require('body-parser');
 var passport = require('passport'); 
 var constants = require('./config/constants'); 
 
+
+var session = require('express-session');
+var compression = require('compression');
+var MongoStore = require('connect-mongo')(session);
+
+
 //registering controllers to variables 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -28,11 +34,20 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(session({
+    secret: "1234567890QWERTY", 
+    store: new MongoStore({
+        url: constants.MONGO_DEV_REMOTE, 
+        ttl: 14 * 24 * 3600,
+        autoRemove: 'native',
+        touchAfter: 24 * 3600
+    })
+})); 
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(compression());
 app.use(passport.initialize());
 app.use(passport.session());
 
